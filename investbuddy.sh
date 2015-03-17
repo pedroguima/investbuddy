@@ -43,9 +43,6 @@ for ticker in $(cat $FILE); do
 			leaders="$industry_rank\t\t$ticker"
 		fi
 		counter=$(expr $counter + 1)
-		if [ $counter -ge $LOWEST_IND_RANK ]; then
-			break
-		fi
 	fi
 done	
 
