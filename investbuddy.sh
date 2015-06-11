@@ -33,22 +33,17 @@ for ticker in $(cat $FILE); do
 	if ! [[ $industry_rank =~ $number ]]; then
 		continue
 	fi
-	if [ $industry_rank -gt $LOWEST_IND_RANK ]; then
+	if [ "$industry_rank" -gt "$LOWEST_IND_RANK" ]; then
 		continue
 	fi
 	if [ -n "$leader" ]; then 
 		if [ $counter -ge 1 ]; then
-			leaders="$industry_rank\t\t$ticker\n$leaders"
+			leaders="$(date -I),$industry_rank,$ticker\n$leaders"
 		else
-			leaders="$industry_rank\t\t$ticker"
+			leaders="$(date -I),$industry_rank,$ticker"
 		fi
 		counter=$(expr $counter + 1)
 	fi
 done	
 
-echo
-echo -e "#################################"
-echo -e "Industry Rank \t Ticker"
 echo -e $leaders | sort -n
-echo
-
