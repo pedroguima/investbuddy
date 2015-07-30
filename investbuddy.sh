@@ -21,6 +21,7 @@ WGET="/usr/bin/wget"
 counter=0
 declare -a leaders
 IFS=$'\n'
+date=$(date -I)
 for ticker in $(cat $FILE); do
 	json_response=$($WGET $URL --header="$HEADER" --post-data="{\"q\":\"$ticker\",\"limit\":1}" -O - 2> /dev/null )
 	ticker_url="http:"$(echo $json_response | awk -F ":" '{print $NF;}' | sed 's/\"\}\]\}//g')
@@ -37,12 +38,7 @@ for ticker in $(cat $FILE); do
 		continue
 	fi
 	if [ -n "$leader" ]; then 
-		if [ $counter -ge 1 ]; then
-			leaders="$(date -I),$industry_rank,$ticker\n$leaders"
-		else
-			leaders="$(date -I),$industry_rank,$ticker"
-		fi
-		counter=$(expr $counter + 1)
+		echo "INSERT INTO stocks values (\"$ticker\", \"$date\", $industry_rank, \"$ticker_url\" );" | mysql finance
 	fi
 done	
 
